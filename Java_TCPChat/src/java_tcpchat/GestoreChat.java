@@ -119,8 +119,7 @@ public class GestoreChat {
                 break;
 
             case "$ultimo":
-                System.out.println(this.ultimoMessaggio);
-                this.scrivi("");
+                this.scrivi(this.ultimoMessaggio);
                 break;
 
             case "$help":
