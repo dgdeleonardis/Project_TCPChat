@@ -11,18 +11,20 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
 /**
  *
  * @author Calosci Matteo
  */
 public class Client extends Host {
+    
+    private final static String COLORE = "\u001B[35m";
+    //Nome identificativo dell'oggetto
+    //Viene passato al costruttore di gestore per inizializzare il contenuto dell'attributo autore.
+    private final String NOME = "Client";
 
-    public Client(Gestore g) {
-        this.g = g;
-        this.s = new Scanner(System.in);
-        this.connesso = false;
+    public Client() {
+        
     }
 
     public void connetti() {
@@ -35,15 +37,10 @@ public class Client extends Host {
             //Viene effettuata la connessione con il server
             this.client = new Socket(InetAddress.getLocalHost(), this.port);
             System.out.println("Connessione stabilita con il server " + InetAddress.getLocalHost() + ":" + port + "\n");
-            this.connesso = true;
-            //Creazione del canale comunicativo
-            this.in = new DataInputStream(this.client.getInputStream());
-            this.out = new DataOutputStream(this.client.getOutputStream());
-            while (this.connesso) {
-                this.scrivi(s.nextLine());
-                System.out.println("Il server ha scritto: " + this.leggi());
-            }
-
+            System.out.println(this.COLORE + "Ciao io sono il client!");
+            //Creazione del gestore
+            this.g = new Gestore(new DataInputStream(this.client.getInputStream()), new DataOutputStream(this.client.getOutputStream()), this.NOME , this.COLORE,true);
+            
         } catch (UnknownHostException e) {
             System.out.println("Host sconosciuto");
         } catch (IOException e) {
@@ -51,49 +48,14 @@ public class Client extends Host {
         }
     }
 
-    public String leggi() {
-        try {
-            return in.readUTF();
-        } catch (IOException ex) {
-            System.err.println("Impossibile leggere dallo stream");
-            return null;
+    public static void main(String[] args) {
+        Client c = new Client();
+        c.connetti();
+        while (c.g.getConnesso()) {
+            c.g.menu();
+            c.g.leggi();
         }
-    }
-
-    public void scrivi(String messaggio) {
-        try {
-            messaggio = messaggio.toLowerCase();
-            switch (messaggio) {
-                case "non disponibile":
-                    this.g.disponibilita = false;
-                    break;
-
-                case "disponibile":
-                    this.g.disponibilita = true;
-                    break;
-
-                case "autore":
-                    System.out.println("\tScegli il nome!");
-                    this.g.setAutore(this.s.nextLine());
-                    break;
-
-                case "smile":
-                    this.out.writeUTF("=)");
-                    break;
-
-                case "end":
-                    connesso = false;
-                    break;
-
-                default:
-
-                    out.writeUTF(messaggio);
-
-            }
-
-        } catch (IOException ex) {
-            System.err.println("Impossibile scrivere sullo stream");
-        }
+        
     }
 
 }

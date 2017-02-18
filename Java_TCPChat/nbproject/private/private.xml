@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Studenti/Documents/NetBeansProjects/5BINF/Java_TCPChat/src/java_tcpchat/Gestore.java</file>
-            <file>file:/C:/Users/Studenti/Documents/NetBeansProjects/5BINF/Java_TCPChat/src/java_tcpchat/Server.java</file>
-            <file>file:/C:/Users/Studenti/Documents/NetBeansProjects/5BINF/Java_TCPChat/src/java_tcpchat/Client.java</file>
+            <file>file:/C:/Users/studenti/Desktop/Java_TCPChat/src/java_tcpchat/Server.java</file>
+            <file>file:/C:/Users/studenti/Desktop/Java_TCPChat/src/java_tcpchat/Client.java</file>
+            <file>file:/C:/Users/studenti/Desktop/Java_TCPChat/src/java_tcpchat/Host.java</file>
+            <file>file:/C:/Users/studenti/Desktop/Java_TCPChat/src/java_tcpchat/Gestore.java</file>
         </group>
     </open-files>
 </project-private>
