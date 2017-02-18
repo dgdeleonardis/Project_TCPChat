@@ -12,51 +12,74 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 
 /**
+ * Classe che estende Host. Modella l'entità del Server all'interno di
+ * un'architettura Client/Server. Rispetto alla classe madre sono stati aggiunti
+ * gli attributi e i metodi caratteristici di un'applicativo lato Server per
+ * l'instaurazione di una connessione secondo le regole del protocollo TCP.
  *
- * @author Calosci Matteo
+ * @author Calosci Matteo (commenti di Diego De Leonardi)
  */
 public class Server extends Host {
 
-    //Oggetto di tipo ServerSocket che permette di stabilire la connessione 
+    //Oggetto di tipo ServerSocket necessario per l'apertura della connessione.
     ServerSocket serverSocket;
-    //Colore
-    private final static String COLORE= "\u001B[34m";
-    //Nome identificativo dell'oggetto
-    //Viene passato al costruttore di gestore per inizializzare il contenuto dell'attributo autore.
-    private final String NOME = "Server";
-    
+
+    /**
+     * Costruttore della classe che va ad istanziare l'oggetto, andando a
+     * valorizzare il solo attributo porta. Si richiama il costruttore della
+     * superclasse.
+     *
+     * @param porta valore della porta dove il server sarà in ascolto
+     */
     public Server(int porta) {
-         super(porta);
+        super(porta);
     }
-    
-    public void attendi() {
+
+    /**
+     * Metodo per l'apertura di una connessione da parte dell'entità Server
+     * sulla porta prefissata.
+     *
+     * @param autoreDefault nome di default dell'entità.
+     * @param coloreTerminaleDefault colore di default sul terminale
+     * dell'entità.
+     */
+    public void attendi(String autoreDefault, String coloreTerminaleDefault) {
         try {
-            //Creo il server sulla porta 2000
+            //Il Server si mette in ascolto sulla porta prefissata attendendo possibili richieste
             this.serverSocket = new ServerSocket(this.porta);
-                System.out.println("Server in ascolto su " + InetAddress.getLocalHost() + ":" + porta);
-                //Metto in attesa di richieste il processo server sulla porta 2000.
-                //Nel momento in cui venissero effettuate richieste, il metodo accept()
-                //restituirà un oggetto Socket connesso con il client richiedente
-                this.connectionSocket = this.serverSocket.accept();
-                System.out.println("Connessione effettuata con successo.\n");
-                System.out.println(this.COLORE + "Ciao io sono il server!" + "\u001B[0m");
-                //Creazione del gestore
-                this.gestore= new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()),new DataOutputStream(this.connectionSocket.getOutputStream()),this.NOME,this.COLORE,true);        
+            System.out.println("Server in ascolto sull'indirizzo IP " + InetAddress.getLocalHost() + " : " + porta);
+            this.connectionSocket = this.serverSocket.accept();
+            //Creazione di un gestore nel caso di instaurazione di una connessione
+            this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault, true);
+            System.out.println("Connessione effettuata con successo.\n" + this.gestore.getCOLORE() + "Ciao io sono il server!" + "\u001B[0m");
         } catch (IOException e) {
-            System.err.println("Impossibile leggere dallo stream");
-        }        
+            System.err.println("ERRORE: è possibile che non sia riusciti ad/n"
+                    + "\tIstaziare l'oggetto ServerSocket;\n"
+                    + "\tInstaurare una connessione;\n");
+        }
     }
-    
-    
+
+    /**
+     * Metodo statico per l'avvio della classe.
+     *
+     * @param args argomenti da linea di comando
+     */
     public static void main(String[] args) {
-        Server s = new Server(2000); 
-        while(true){ 
-            s.attendi();
-            while(s.gestore.getConnesso()){
+        /**
+         * Variabili locali ausiliari per l'inizializzazione della classe
+         * gestore. Commento per Matteo: da verificare l'utilità e la
+         * correttezza.
+         */
+        String autoreDefault = "Server";
+        String coloreTerminaleDefault = "\u001B[32m";
+
+        Server s = new Server(2000);
+        while (true) {
+            s.attendi(autoreDefault, coloreTerminaleDefault);
+            while (s.gestore.getConnesso()) {
                 s.gestore.leggi();
-                s.gestore.menu(); 
+                s.gestore.menu();
             }
-            
         }
     }
 }

@@ -17,12 +17,6 @@ import java.net.UnknownHostException;
  * @author Calosci Matteo
  */
 public class Client extends Host {
-    
-    private final static String COLORE = "\u001B[35m";
-    //Nome identificativo dell'oggetto
-    //Viene passato al costruttore di gestore per inizializzare il contenuto dell'attributo autore.
-    private final String NOME = "Client";
-
     /**
      *
      */
@@ -42,10 +36,11 @@ public class Client extends Host {
              */
             //Viene effettuata la connessione con il server
             this.connectionSocket = new Socket(InetAddress.getLocalHost(), this.porta);
-            System.out.println("Connessione stabilita con il server " + InetAddress.getLocalHost() + ":" + porta + "\n");
-            System.out.println(this.COLORE + "Ciao io sono il client!");
             //Creazione del gestore
-            this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), this.NOME , this.COLORE,true);
+            this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), this.gestore.getAutore() , this.gestore.getCOLORE(),true);
+            System.out.println("Connessione stabilita con il server " + InetAddress.getLocalHost() + ":" + porta + "\n");
+            System.out.println(this.gestore.getCOLORE() + "Ciao io sono il client!");
+            
             
         } catch (UnknownHostException e) {
             System.out.println("Host sconosciuto");

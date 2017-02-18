@@ -63,6 +63,10 @@ public class GestoreChat {
     public boolean getDisponibilita() {
         return this.disponibilita;
     }
+
+    public String getCOLORE() {
+        return COLORE;
+    }
     
     public boolean getConnesso(){
         return this.connesso;
