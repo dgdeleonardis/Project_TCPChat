@@ -17,10 +17,9 @@ import java.net.ServerSocket;
  * gli attributi e i metodi caratteristici di un'applicativo lato Server per
  * l'instaurazione di una connessione secondo le regole del protocollo TCP.
  *
- * @author Calosci Matteo (commenti di Diego De Leonardi)
+ * @author Calosci Matteo (commenti di Diego De Leonardis)
  */
 public class Server extends Host {
-
     //Oggetto di tipo ServerSocket necessario per l'apertura della connessione.
     ServerSocket serverSocket;
 
@@ -54,7 +53,7 @@ public class Server extends Host {
             System.out.println("Connessione effettuata con successo.\n" + this.gestore.getCOLORE() + "Ciao io sono il server!" + "\u001B[0m");
         } catch (IOException e) {
             System.err.println("ERRORE: è possibile che non sia riusciti ad/n"
-                    + "\tIstaziare l'oggetto ServerSocket;\n"
+                    + "\tIstanziare l'oggetto ServerSocket;\n"
                     + "\tInstaurare una connessione;\n");
         }
     }
