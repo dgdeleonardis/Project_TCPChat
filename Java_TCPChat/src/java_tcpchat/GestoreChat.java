@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license header, choose License Headers inDataStream Project Properties.
  * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * and open the template inDataStream the editor.
  */
 package java_tcpchat;
 
@@ -11,41 +11,109 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
+ * Classe che modella GestoreChat. Ha la funzione di offrire all'entità Host le
+ * operazioni e gli attributi per la gestione di una chat punto-punto.
  *
- * @author Matteo Calosci
+ * @author Matteo Calosci (commenti di Diego De Leonardis)
  */
 public class GestoreChat {
 
-    //Oggetto utilizzato per la lettura da tastiera
-    private Scanner tastiera;
-    //Ultimo messaggio ricevuto
-    private String ultimo;
-    //Attributo che rappresenta la disponibilità del c/s
-    private boolean disponibilita;
     //Stream per la comunicazione
-    private final DataInputStream in;
-    private final DataOutputStream out;
-    //Nome autore
+    private final DataInputStream inDataStream;
+    private final DataOutputStream outDataStream;
+    //Scanner per lettura da tastiera
+    private final Scanner tastiera;
+
+    //Nome dell'entità a cui è associato il gestore
     private String autore;
-    //Nome entità
-    private final String NOME;
-    //Colore
+    //Colore dell'output dell'entità a cui è associato il gestore
     private final String COLORE;
+    //Ultimo messaggio ricevuto
+    private String ultimoMessaggio;
+
     //Determina se l'host è connesso
     private boolean connesso;
-    //Imposto il codice ansi per il colore di reset
+    //Determina la disponibilità dell'entità a cui è associato il gestore di ricevere messaggi 
+    private boolean disponibilita;
+    //Valore per il reset del colore di output
     public static final String RESET = "\u001B[0m";
-    //Il costruttore GestoreChat consente di creare un oggetto di tipo GestoreChat e di inizializzare
-    //Gli stream associati, il nome dell'entità a cui è applciato (CLIENT o SERVER) il colore 
-    //che caratterizza l'entità a cui è applicato e lo stato (connesso inizialmente)
-    public GestoreChat(DataInputStream in, DataOutputStream out, String nome, String colore, boolean connesso) {
+
+    /**
+     * Costruttore della classe che consente di creare un oggetto di tipo
+     * GestoreChat e di inizializzare gli stream di I/O per lo scambio dei
+     * messaggi, il colore e l'autore che caratterizza l'entità a cui è
+     * applicato e lo stato e la disponibilità di questo.
+     *
+     * @param in stream di input dell'entità a cui è associata l'istanza
+     * @param out stream di output dell'entità a cui è associata l'istanza
+     * @param nome nome dell'entità a cui è associata l'istanza
+     * @param colore colore dell'output da terminale dell'entità a cui è
+     * associata l'istanza
+     */
+    public GestoreChat(DataInputStream in, DataOutputStream out, String nome, String colore) {
+        this.inDataStream = in;
+        this.outDataStream = out;
         this.tastiera = new Scanner(System.in);
-        this.in = in;
-        this.out = out;
-        this.autore = "Ancora non definito! Scrivi \"autore\" per impostare un nome!";
-        this.connesso = connesso;
-        this.NOME = nome;
+        this.autore = nome;
         this.COLORE = colore;
+        this.connesso = true;
+        this.disponibilita = true;
+    }
+
+    /**
+     * Metodo che ha come funzione l'interpretazione dell'input dell'utente
+     */
+    public void menu() {
+        String inputUtente = this.tastiera.nextLine();
+        inputUtente = this.RESET + inputUtente.toLowerCase();
+        switch (inputUtente) {
+            case "smile":
+                this.scrivi("=)");
+                break;
+
+            case "autore":
+                System.out.println("\tNome attuale: " + this.COLORE + this.getAutore() + this.RESET);
+                System.out.print("\tVuoi cambiarlo ? (s/n): ");
+                String scelta = this.tastiera.nextLine().toLowerCase();
+                if (scelta.equals("s")) {
+                    System.out.print("\tInserisci un nuovo nome: ");
+                    this.setAutore(this.tastiera.nextLine());
+                }
+                break;
+
+            case "end":
+                this.chiudi();
+                break;
+
+            default:
+                this.scrivi(inputUtente);
+                break;
+        }
+    }
+
+    /**
+     * 
+     */
+    public void leggi() {
+        try {
+            String letta = inDataStream.readUTF();
+            System.out.println(this.COLORE + " >>> " + this.RESET + letta);
+            this.ultimoMessaggio = letta;
+        } catch (IOException ex) {
+            System.err.println("Impossibile leggere");
+        }
+    }
+
+    public void scrivi(String messaggio) {
+        try {
+            this.outDataStream.writeUTF(messaggio);
+        } catch (IOException ex) {
+            System.err.println("Impossibile scrivere");
+        }
+    }
+
+    public void chiudi() {
+
     }
 
     public void setAutore(String autore) {
@@ -67,59 +135,9 @@ public class GestoreChat {
     public String getCOLORE() {
         return COLORE;
     }
-    
-    public boolean getConnesso(){
+
+    public boolean getConnesso() {
         return this.connesso;
-    }
-
-    public void leggi() {
-        try {
-            String letta = in.readUTF();
-            System.out.println(this.COLORE + " >>> " + this.RESET + letta);
-            this.ultimo = letta;
-        } catch (IOException ex) {
-            System.err.println("Impossibile leggere");
-        }
-    }
-
-    public void scrivi(String messaggio) {
-        try {
-            this.out.writeUTF(messaggio);
-        } catch (IOException ex) {
-            System.err.println("Impossibile scrivere");
-        }
-    }
-    
-    public void chiudi(){
-        
-    }
-    
-    public void menu() {
-        String letta = this.tastiera.nextLine();
-        letta = this.RESET + letta.toLowerCase();
-        switch (letta) {
-            case "smile":
-                this.scrivi("=)");
-            break;
-
-            case "autore":
-                System.out.println("\tNome attuale: " + this.COLORE + this.getAutore() + this.RESET);
-                System.out.println("\tVuoi cambiarlo ? (si/no)");
-                String scelta = this.tastiera.nextLine().toLowerCase();
-                if (scelta.equals("si")) {
-                    System.out.println("\tInserisci il nuovo nome");
-                    this.setAutore(this.tastiera.nextLine());
-                }
-            break;
-
-            case "end":
-                this.chiudi();
-            break;
-                
-            default:
-                this.scrivi(letta);
-            break;
-        }
     }
 
 }

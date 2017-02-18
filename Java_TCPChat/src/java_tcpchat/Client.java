@@ -45,7 +45,7 @@ public class Client extends Host {
             //Il Client richiede sulla porta ed indirizzo IP prefissato l'instaurazione di una connessione
             this.connectionSocket = new Socket(InetAddress.getLocalHost(), this.porta);
             //Creazione di un gestore nel caso di instaurazione di una connessione
-            this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault, true);
+            this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault);
             System.out.println("Connessione stabilita con il server " + InetAddress.getLocalHost() + ":" + porta + "\n");
             System.out.println(this.gestore.getCOLORE() + "Ciao io sono il client!");
         } catch (UnknownHostException e) {

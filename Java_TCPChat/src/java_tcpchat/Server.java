@@ -49,7 +49,7 @@ public class Server extends Host {
             System.out.println("Server in ascolto sull'indirizzo IP " + InetAddress.getLocalHost() + " : " + porta);
             this.connectionSocket = this.serverSocket.accept();
             //Creazione di un gestore nel caso di instaurazione di una connessione
-            this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault, true);
+            this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault);
             System.out.println("Connessione effettuata con successo.\n" + this.gestore.getCOLORE() + "Ciao io sono il server!" + "\u001B[0m");
         } catch (IOException e) {
             System.err.println("ERRORE: è possibile che non sia riusciti ad/n"
