@@ -8,16 +8,20 @@ package java_tcpchat;
 import java.net.Socket;
 
 /**
+ * Classe astratta che va a modellare il concetto di host all'interno di
+ * un'architettura Client/Server. E' definita esclusivamente da un oggetto di
+ tipo GestoreChat (per la gestione della chat) e dalla coppia socket - porta per
+ l'instaurazione di una connessione stabile secondo le regole del protocollo
+ TCP.
  *
- * @author Calosci Matteo
+ * @author Calosci Matteo (commenti di Diego De Leonardis)
  */
 public abstract class Host {
+    protected GestoreChat gestore;
+    protected Socket connectionSocket;
+    protected int porta;
     
-    //Gestore dell'host
-    Gestore g;
-    //Oggetto di tipo Socket che permette di stabilire una connessione tra c/s
-    Socket client;
-    //Porta su cui è in ascolto il server e su cui il client farà richiests
-    int port = 2000;
-    
+    public Host(int porta) {
+        this.porta = porta;
+    }
 }

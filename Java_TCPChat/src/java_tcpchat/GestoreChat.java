@@ -9,14 +9,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Matteo Calosci
  */
-public class Gestore {
+public class GestoreChat {
 
     //Oggetto utilizzato per la lettura da tastiera
     private Scanner tastiera;
@@ -37,10 +35,10 @@ public class Gestore {
     private boolean connesso;
     //Imposto il codice ansi per il colore di reset
     public static final String RESET = "\u001B[0m";
-    //Il costruttore Gestore consente di creare un oggetto di tipo Gestore e di inizializzare
+    //Il costruttore GestoreChat consente di creare un oggetto di tipo GestoreChat e di inizializzare
     //Gli stream associati, il nome dell'entità a cui è applciato (CLIENT o SERVER) il colore 
     //che caratterizza l'entità a cui è applicato e lo stato (connesso inizialmente)
-    public Gestore(DataInputStream in, DataOutputStream out, String nome, String colore, boolean connesso) {
+    public GestoreChat(DataInputStream in, DataOutputStream out, String nome, String colore, boolean connesso) {
         this.tastiera = new Scanner(System.in);
         this.in = in;
         this.out = out;
