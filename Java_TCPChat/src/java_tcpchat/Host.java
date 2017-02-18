@@ -10,7 +10,7 @@ import java.net.Socket;
 /**
  * Classe astratta che va a modellare il concetto di host all'interno di
  * un'architettura Client/Server. E' definita principalmente da un oggetto di
- * tipo GestoreChat (per la gestione della chat) e dalla coppia socket - porta per
+ * tipo GestoreChat (per la gestione della chat) e dalla coppia ip - porta per
  * l'instaurazione di una connessione stabile secondo le regole del protocollo
  * TCP.
  *

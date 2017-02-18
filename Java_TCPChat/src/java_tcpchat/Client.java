@@ -47,7 +47,8 @@ public class Client extends Host {
             //Creazione di un gestore nel caso di instaurazione di una connessione
             this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault);
             System.out.println("Connessione stabilita con il server " + InetAddress.getLocalHost() + ":" + porta + "\n");
-            System.out.println(this.gestore.getCOLORE() + "Ciao io sono il client!");
+            System.out.println(this.gestore.getCOLORE() + "Ciao io sono il client!" + "\u001B[0m");
+            this.gestore.menuToString();
         } catch (UnknownHostException e) {
             System.out.println("ERRORE: Host sconosciuto");
         } catch (IOException e) {
@@ -59,7 +60,7 @@ public class Client extends Host {
      *
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args){
         /**
          * Variabili locali ausiliari per l'inizializzazione della classe
          * gestore. Commento per Matteo: da verificare l'utilità e la

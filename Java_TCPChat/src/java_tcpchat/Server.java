@@ -51,8 +51,9 @@ public class Server extends Host {
             //Creazione di un gestore nel caso di instaurazione di una connessione
             this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault);
             System.out.println("Connessione effettuata con successo.\n" + this.gestore.getCOLORE() + "Ciao io sono il server!" + "\u001B[0m");
+            this.gestore.menuToString();
         } catch (IOException e) {
-            System.err.println("ERRORE: è possibile che non sia riusciti ad/n"
+            System.err.println("ERRORE: è possibile che non sia riusciti ad\n"
                     + "\tIstanziare l'oggetto ServerSocket;\n"
                     + "\tInstaurare una connessione;\n");
         }
@@ -63,7 +64,7 @@ public class Server extends Host {
      *
      * @param args argomenti da linea di comando
      */
-    public static void main(String[] args) {
+    public static void main(String[] args){
         /**
          * Variabili locali ausiliari per l'inizializzazione della classe
          * gestore. Commento per Matteo: da verificare l'utilità e la
