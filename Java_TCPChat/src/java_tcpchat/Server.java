@@ -14,7 +14,7 @@ import java.net.ServerSocket;
 /**
  * Classe che estende Host. Modella l'entità del Server all'interno di
  * un'architettura Client/Server. Rispetto alla classe madre sono stati aggiunti
- * gli attributi e i metodi caratteristici di un'applicativo lato Server per
+ * gli attributi e i metodi caratteristici di un applicativo lato Server per
  * l'instaurazione di una connessione secondo le regole del protocollo TCP.
  *
  * @author Calosci Matteo (commenti di Diego De Leonardis)

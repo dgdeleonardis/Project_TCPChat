@@ -37,7 +37,7 @@ public class Client extends Host {
 
     /**
      * Metodo per la richiesta ed instaurazione di una connessione da parte
-     * dell'entità ad un server, sulla porta ed indirizzo IP prefissati
+     * dell'entità ad un server, sulla porta ed indirizzo IP prefissati.
      *
      * @param autoreDefault nome di default dell'entità.
      * @param coloreTerminaleDefault colore di default sul terminale
