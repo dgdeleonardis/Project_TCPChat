@@ -68,7 +68,7 @@ public class Server extends Host {
      * @param args argomenti da linea di comando
      */
     public static void main(String[] args) {
-        //Definizioni di alcuni parametri di default
+        //Definizione di alcuni parametri di default
         String autoreDefault = "Server";
         String coloreTerminaleDefault = "\u001B[32m";
         int porta = 2000;

@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
  * i metodi caratteristici di un'applicativo lato Client per la richiesta ed
  * instaurazione di una connessione secondo le regole del protocollo TCP.
  *
- * @author Calosci Matteo (commento di Diego De Leonardis)
+ * @author Calosci Matteo (commenti di Diego De Leonardis)
  */
 public class Client extends Host {
 
@@ -46,31 +46,29 @@ public class Client extends Host {
             this.connectionSocket = new Socket(InetAddress.getLocalHost(), this.porta);
             //Creazione di un gestore nel caso di instaurazione di una connessione
             this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault);
-            System.out.println("Connessione stabilita con il server " + InetAddress.getLocalHost() + ":" + porta + "\n");
-            System.out.println(this.gestore.getCOLORE() + "Ciao io sono il client!" + "\u001B[0m");
+            System.out.println("Connessione instaurata con successo con il server " + InetAddress.getLocalHost() + " sulla porta " + porta);
+            System.out.println(this.gestore.getCOLORE() + "Ciao, io sono " + this.gestore.getAutore() + "!" + GestoreChat.RESET);
             this.gestore.menuToString();
         } catch (UnknownHostException e) {
-            System.out.println("ERRORE: Host sconosciuto");
+            System.out.println("ERRORE: impossibile riconoscere l'host.");
         } catch (IOException e) {
-            System.out.println("ERRORE: impossibile avviare la comunicazione");
+            System.out.println("ERRORE: impossibile avviare la comunicazione.");
         }
     }
 
     /**
-     *
-     * @param args
+     * Metodo statico per l'avvio della classe.
+     * @param args argomenti da linea di comando
      */
-    public static void main(String[] args){
-        /**
-         * Variabili locali ausiliari per l'inizializzazione della classe
-         * gestore. Commento per Matteo: da verificare l'utilità e la
-         * correttezza.
-         */
+    public static void main(String[] args) {
+        //Definizione di alcuni parametri di default
         String autoreDefault = "Client";
         String coloreTerminaleDefault = "\u001B[35m";
+        int porta = 2000;
 
-        Client c = new Client(2000);
+        Client c = new Client(porta);
         c.connetti(autoreDefault, coloreTerminaleDefault);
+        //Svolgimento della chat fino a che non si è più connessi con l'altra entità
         while (c.gestore.getConnesso()) {
             c.gestore.scriviMessaggio();
             c.gestore.leggiMessaggio();
