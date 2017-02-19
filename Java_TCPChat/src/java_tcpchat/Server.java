@@ -35,7 +35,6 @@ public class Server extends Host {
         super(porta);
         try {
             this.serverSocket = new ServerSocket(this.porta);
-            System.out.println("Server " + InetAddress.getLocalHost() + " in ascolto sulla porta " + porta);
         } catch (IOException e) {
             System.err.println("ERRORE: impossibile istanziare l'oggetto serverSocket della classe Server.");
         }
@@ -52,11 +51,12 @@ public class Server extends Host {
     public void attendi(String autoreDefault, String coloreTerminaleDefault) {
         try {
             //Il Server attende una possibile richiesta da parte di un client di connessione
+            System.out.println("Server " + InetAddress.getLocalHost() + " in ascolto sulla porta " + porta);
             this.connectionSocket = this.serverSocket.accept();
             //Creazione di un gestore nel caso di instaurazione di una connessione
             this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault);
             System.out.println("Connessione instaurata con successo.\n" + this.gestore.getCOLORE() + "Ciao, io sono " + this.gestore.getAutore() + "!" + GestoreChat.RESET);
-            this.gestore.menuToString();
+            this.gestore.stampaMenu();
         } catch (IOException e) {
             System.err.println("ERRORE: impossibile instaurare una connessione.");
         }
@@ -70,7 +70,7 @@ public class Server extends Host {
     public static void main(String[] args) {
         //Definizione di alcuni parametri di default
         String autoreDefault = "Server";
-        String coloreTerminaleDefault = "\u001B[32m";
+        String coloreTerminaleDefault = "\u001B[34m";
         int porta = 2000;
         boolean loopFlag = true;
 
@@ -86,7 +86,7 @@ public class Server extends Host {
             try {
                 s.connectionSocket.close();
             } catch (IOException ex) {
-                System.err.println("ERRORE: impossibile chiudere la connessione");
+                System.err.println(GestoreChat.RESET + ">>> ERRORE: impossibile chiudere la connessione");
             }
         }
     }

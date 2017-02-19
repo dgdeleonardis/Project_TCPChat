@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe che estende Host. Modella l'entità del Client all'interno di
@@ -48,7 +50,7 @@ public class Client extends Host {
             this.gestore = new GestoreChat(new DataInputStream(this.connectionSocket.getInputStream()), new DataOutputStream(this.connectionSocket.getOutputStream()), autoreDefault, coloreTerminaleDefault);
             System.out.println("Connessione instaurata con successo con il server " + InetAddress.getLocalHost() + " sulla porta " + porta);
             System.out.println(this.gestore.getCOLORE() + "Ciao, io sono " + this.gestore.getAutore() + "!" + GestoreChat.RESET);
-            this.gestore.menuToString();
+            this.gestore.stampaMenu();
         } catch (UnknownHostException e) {
             System.out.println("ERRORE: impossibile riconoscere l'host.");
         } catch (IOException e) {
@@ -72,6 +74,11 @@ public class Client extends Host {
         while (c.gestore.getConnesso()) {
             c.gestore.scriviMessaggio();
             c.gestore.leggiMessaggio();
+        }
+        try {
+            c.connectionSocket.close();
+        } catch (IOException ex) {
+            System.err.println(">>> ERRORE: impossibile chiudere la connessione");
         }
     }
 }

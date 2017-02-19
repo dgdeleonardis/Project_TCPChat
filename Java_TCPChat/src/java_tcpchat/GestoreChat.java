@@ -33,8 +33,9 @@ public class GestoreChat {
 
     //Determina se l'host è connesso
     private boolean connesso;
-    //Determina la disponibilità dell'entità a cui è associato il gestore di ricevere messaggi 
+    //Determina la disponibilità di ricevere messaggi dell'entità a cui è associato il gestore
     private boolean disponibilita;
+
     //Valore per il reset del colore di output
     public static final String RESET = "\u001B[0m";
 
@@ -64,151 +65,166 @@ public class GestoreChat {
      * Metodo che ha come funzione l'interpretazione dell'input dell'utente
      */
     public void scriviMessaggio() {
-        //Nel momento in cui verrà digitato un comando speciale da parte di una delle due entità
-        //sarà comunque necessario inviare un messaggio vuoto all'entità "destinatario"
-        //tramite l'istruzione this.scrivi("");
-        System.out.print("Scrivi pure qualcosa : ");
-        String inputUtente = this.tastiera.nextLine();
-        inputUtente = inputUtente.toLowerCase();
+        //Input da parte dell'utente
+        System.out.print(this.COLORE + ">>> ");
+        String inputUtente = this.tastiera.nextLine().toLowerCase();
+        //Analisi dell'input dell'utente
         switch (inputUtente) {
-            case "$smile":
-                this.scrivi("=)");
-                break;
-
             case "$autore":
-                System.out.println("\tNome attuale: " + this.COLORE + this.getAutore() + GestoreChat.RESET);
-                System.out.print("\tVuoi cambiarlo ? (si/no): ");
-                String scelta = this.tastiera.nextLine().toLowerCase();
-                if (scelta.equals("si")) {
-                    System.out.print("\tInserisci un nuovo nome: ");
-                    this.setAutore(this.tastiera.nextLine());
+                System.out.println(this.COLORE + ">>> Nome attuale: " + this.autore);
+                System.out.print(this.COLORE + ">>> Vuoi cambiarlo? (sì/no)\n" + this.COLORE + ">>> ");
+                inputUtente = this.tastiera.nextLine().toLowerCase();
+                if (inputUtente.equals("sì") || inputUtente.equals("si")) {
+                    String temp = this.autore;
+                    System.out.print(this.COLORE + ">>> Inserisci un nuovo nome: ");
+                    this.autore = this.tastiera.nextLine();
+                    System.out.println(this.COLORE + ">>> Modifica effettuata.");
                     //Informo il destinatario di aver cambiato nome
-                    this.scrivi(" <---- Guarda ! Ho appena cambiato il mio nome !");
+                    this.inviaMessaggio(temp + " ha cambiato nome in " + this.autore);
                 } else {
-                    this.scrivi("");
+                    System.out.println(this.COLORE + ">>> Operazione annullata.");
+                    this.scriviMessaggio();
                 }
-
-                break;
-
-            case "$end":
-                this.scrivi("end");
-                this.chiudi();
                 break;
 
             case "$disponibile":
-                System.out.println("\tStato attuale: " + this.disponibilita);
-                System.out.print("\tVuoi cambiare lo stato dell'entità " + this.autore + " ? (si/no): ");
-                if (this.tastiera.nextLine().toLowerCase().equals("si")) {
-                    this.setDisponibilita(!this.disponibilita);
-                    while (!this.disponibilita) {
-                        System.out.print("\tSto dormendo! digita \"$sveglia\" per svegliarmi\n\t");
-                        String sveglia = this.tastiera.nextLine();
-                        if (sveglia.toLowerCase().equals("$sveglia")) {
-                            this.setDisponibilita(true);
-                            //Informo il destinatario di essere stato offline per un po'
-                            this.scrivi("Scusa ... Mi ero assentato un po' !");
-                        } else {
-                            System.out.print("\tContinuo a dormire allora ;)\n");
-                        }
+                System.out.println(this.COLORE + ">>> Stato attuale: " + this.disponibilita);
+                System.out.print(this.COLORE + ">>> Vuoi cambiare lo stato dell'entità " + this.autore + " ? (sì/no)\n" + this.COLORE + ">>> ");
+                inputUtente = this.tastiera.nextLine().toLowerCase();
+                if (inputUtente.equals("sì") || inputUtente.equals("si")) {
+                    this.disponibilita = !this.disponibilita;
+                    if (this.disponibilita) {
+                        this.inviaMessaggio(this.autore + " adesso è disponibile e può ricevere i tuoi messaggi.");
+                    } else {
+                        this.inviaMessaggio(this.autore + " adesso non è disponibil per ricevere i tuoi messaggi.");
                     }
-                } else {
-                    this.scrivi("");
+                    //this.scriviMessaggio();
                 }
                 break;
 
+            case "$smile":
+                this.inviaMessaggio("=)");
+                break;
+
             case "$ultimo":
-                this.scrivi(this.ultimoMessaggio);
+                this.inviaMessaggio(this.ultimoMessaggio);
                 break;
 
             case "$help":
-                this.menuToString();
-                this.scrivi("");
+                this.stampaMenu();
+                this.scriviMessaggio();
+                break;
+
+            case "$end":
+                this.inviaMessaggio("/end/");
+                this.chiudi();
+                System.out.println(this.COLORE + ">>> Connesione chiusa con successo.");
                 break;
 
             default:
-                this.scrivi(inputUtente);
+                this.inviaMessaggio(inputUtente);
                 break;
-
         }
     }
 
     /**
-     *
+     * Metodo che ha come funzione la lettura di nuovi messaggi ricevuti sul
+     * flusso di input
      */
     public void leggiMessaggio() {
         try {
-            String letta = inDataStream.readUTF();
-            String datiTemp[] = letta.split("§");
-            //Se la riga letta è nulla la ignoro
-            if (!(datiTemp[0].equals(""))) {
-                
-                System.out.println(datiTemp[1] + datiTemp[2] + " >>> " + GestoreChat.RESET + datiTemp[0]);
-                this.ultimoMessaggio = datiTemp[0];
-                if((datiTemp[0].replace("\n", "")).equals("end")) {
+            String[] messaggio = inDataStream.readUTF().split("§");
+            if (this.disponibilita) { 
+                if ((messaggio[0].replace("\n", "")).equals("/end/")) {
+                    System.out.println(messaggio[1] + messaggio[2] + " >>> Richiesta di chiusura della connessione...");
                     this.chiudi();
+                    System.out.println(this.COLORE + " >>> Connessione chiusa con successo.");
+                } else {
+                    System.out.println(messaggio[1] + messaggio[2] + " >>> " + messaggio[0]);
+                    this.ultimoMessaggio = messaggio[0];
                 }
+            } else {
+                //this.inviaMessaggio("Host non disponibile per ricevere messaggi.");
             }
-            
-
         } catch (IOException ex) {
-            System.err.println("Impossibile leggere");
+            if(this.connesso) {
+                System.err.println(">>> Impossibile leggere il messaggio.");
+            }
         }
     }
 
-    public void scrivi(String messaggio) {
+    /**
+     * Metodo che ha la funzione di inviare al destinatario un messaggio
+     * attraverso lo stream di output a cui è associata la connessione
+     *
+     * @param messaggio stringa da inviare al destinatario
+     */
+    public void inviaMessaggio(String messaggio) {
         try {
-            //La stringa inviata contiene anche una sorta di header che contiene il colore identificativo
-            //dell'entità mittente e il relativo nome entrambi separati dal carattere §
+            /**
+             * La stringa inviata al mittente contiene rispettivamente il
+             * messaggio, il colore identificativo dell'entità sorgente e il
+             * relativo nome, entrambi separati dal carattere §
+             */
             this.outDataStream.writeUTF(messaggio + "§" + this.COLORE + "§" + this.autore);
-            System.out.println(this.COLORE + "Sono in attesa di un messaggio ..." + GestoreChat.RESET);
+            //System.out.println(this.COLORE + ">>> Sono in attesa di un messaggio ..." + GestoreChat.RESET);
         } catch (IOException ex) {
-            System.err.println("Impossibile scrivere");
+            System.err.println(">>> Impossibile inviare il messaggio.");
         }
     }
 
+    /**
+     * Metodo che ha la funzione di chiudere i flussi di input e output
+     * associati alla connessione
+     */
     public void chiudi() {
         try {
             this.outDataStream.close();
             this.inDataStream.close();
             this.connesso = false;
         } catch (IOException ex) {
-            System.err.println("Impossibile chiudere la comunicazione");
+            System.err.println(">>> Impossibile chiudere la comunicazione.");
         }
 
     }
 
-    public void menuToString() {
-        System.out.print("\tMenu comandi speciali\n"
-                + "\t$autore (Cambia il nome dell'autore)\n"
-                + "\t$smile (Invia uno smile)\n"
-                + "\t$ultimo (Stampa l'ultimo messaggio ricevuto)\n"
-                + "\t$disponibile (Imposta la disponibilità dell'host)\n"
-                + "\t$end (Chiudi la comunicazione)\n"
-                + "\t$help (Stampa il menu)\n");
+    /**
+     * Metodo che ha la funzione di stampare il menu.
+     */
+    public void stampaMenu() {
+        System.out.print(this.COLORE + ">>> Menu dei comandi speciali: \n"
+                + this.COLORE + ">>>\t $autore (Cambia il nome dell'autore)\n"
+                + this.COLORE + ">>>\t $disponibile (Imposta la disponibilità dell'host)\n"
+                + this.COLORE + ">>>\t $smile (Invia uno smile)\n"
+                + this.COLORE + ">>>\t $ultimo (Stampa l'ultimo messaggio ricevuto)\n"
+                + this.COLORE + ">>>\t $help (Stampa il menu)\n"
+                + this.COLORE + ">>>\t $end (Chiudi la comunicazione)\n");
     }
 
-    public void setAutore(String autore) {
-        this.autore = autore;
-    }
-
-    public String getAutore() {
-        return this.autore;
-    }
-
-    public void setDisponibilita(Boolean disp) {
-        this.disponibilita = disp;
-    }
-
-    public boolean getDisponibilita() {
-        return this.disponibilita;
-    }
-
-    public String getCOLORE() {
-        return this.COLORE;
-    }
-
+    /**
+     * Metodo getter che ritorna il valore dell'attributo connesso.
+     *
+     * @return attributo connesso
+     */
     public boolean getConnesso() {
         return this.connesso;
     }
 
+    /**
+     * Metodo getter di autore.
+     *
+     * @return attributo autore
+     */
+    public String getAutore() {
+        return autore;
+    }
+
+    /**
+     * Metodo getter di COLORE.
+     *
+     * @return attributo COLORE
+     */
+    public String getCOLORE() {
+        return COLORE;
+    }
 }
