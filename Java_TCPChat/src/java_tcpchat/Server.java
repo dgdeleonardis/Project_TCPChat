@@ -10,6 +10,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe che estende Host. Modella l'entità del Server all'interno di
@@ -32,6 +34,11 @@ public class Server extends Host {
      */
     public Server(int porta) {
         super(porta);
+        try {
+            this.serverSocket = new ServerSocket(this.porta);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -45,7 +52,7 @@ public class Server extends Host {
     public void attendi(String autoreDefault, String coloreTerminaleDefault) {
         try {
             //Il Server si mette in ascolto sulla porta prefissata attendendo possibili richieste
-            this.serverSocket = new ServerSocket(this.porta);
+            
             System.out.println("Server in ascolto sull'indirizzo IP " + InetAddress.getLocalHost() + " : " + porta);
             this.connectionSocket = this.serverSocket.accept();
             //Creazione di un gestore nel caso di instaurazione di una connessione
@@ -56,6 +63,7 @@ public class Server extends Host {
             System.err.println("ERRORE: è possibile che non sia riusciti ad\n"
                     + "\tIstanziare l'oggetto ServerSocket;\n"
                     + "\tInstaurare una connessione;\n");
+            e.getStackTrace();
         }
     }
 
@@ -76,9 +84,16 @@ public class Server extends Host {
         Server s = new Server(2000);
         while (true) {
             s.attendi(autoreDefault, coloreTerminaleDefault);
+            s.gestore.leggi();
             while (s.gestore.getConnesso()) {
-                s.gestore.leggi();
                 s.gestore.menu();
+                s.gestore.leggi();             
+            }
+            try {
+                s.connectionSocket.close();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

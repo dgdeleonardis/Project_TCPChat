@@ -84,36 +84,34 @@ public class GestoreChat {
                     this.setAutore(this.tastiera.nextLine());
                     //Informo il destinatario di aver cambiato nome
                     this.scrivi(" <---- Guarda ! Ho appena cambiato il mio nome !");
-                }else{
+                } else {
                     this.scrivi("");
                 }
-                
+
                 break;
 
             case "$end":
+                this.scrivi("end");
                 this.chiudi();
-                this.scrivi("");
                 break;
 
             case "$disponibile":
                 System.out.println("\tStato attuale: " + this.disponibilita);
                 System.out.print("\tVuoi cambiare lo stato dell'entità " + this.autore + " ? (si/no): ");
-                if (this.tastiera.nextLine().toLowerCase().equals("si")){
+                if (this.tastiera.nextLine().toLowerCase().equals("si")) {
                     this.setDisponibilita(!this.disponibilita);
-                    while(!this.disponibilita){
+                    while (!this.disponibilita) {
                         System.out.print("\tSto dormendo! digita \"$sveglia\" per svegliarmi\n\t");
                         String sveglia = this.tastiera.nextLine();
-                        if(sveglia.toLowerCase().equals("$sveglia")){
+                        if (sveglia.toLowerCase().equals("$sveglia")) {
                             this.setDisponibilita(true);
                             //Informo il destinatario di essere stato offline per un po'
                             this.scrivi("Scusa ... Mi ero assentato un po' !");
-                        }
-                        else{
+                        } else {
                             System.out.print("\tContinuo a dormire allora ;)\n");
                         }
                     }
-                }
-                else{
+                } else {
                     this.scrivi("");
                 }
                 break;
@@ -143,9 +141,14 @@ public class GestoreChat {
             String datiTemp[] = letta.split("§");
             //Se la riga letta è nulla la ignoro
             if (!(datiTemp[0].equals(""))) {
+                
                 System.out.println(datiTemp[1] + datiTemp[2] + " >>> " + GestoreChat.RESET + datiTemp[0]);
                 this.ultimoMessaggio = datiTemp[0];
+                if((datiTemp[0].replace("\n", "")).equals("end")) {
+                    this.chiudi();
+                }
             }
+            
 
         } catch (IOException ex) {
             System.err.println("Impossibile leggere");

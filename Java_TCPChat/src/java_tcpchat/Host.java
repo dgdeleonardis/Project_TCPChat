@@ -21,6 +21,10 @@ public abstract class Host {
     protected int porta;
     protected GestoreChat gestore;
     
+    /**
+     * Costruttore della classe. Inizializza il valore della porta.
+     * @param porta porta su cui si baserà la comunicazione
+     */
     public Host(int porta) {
         this.porta = porta;
     }
