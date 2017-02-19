@@ -72,8 +72,8 @@ public class Client extends Host {
         Client c = new Client(2000);
         c.connetti(autoreDefault, coloreTerminaleDefault);
         while (c.gestore.getConnesso()) {
-            c.gestore.menu();
-            c.gestore.leggi();
+            c.gestore.scriviMessaggio();
+            c.gestore.leggiMessaggio();
         }
     }
 }

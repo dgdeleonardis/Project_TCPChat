@@ -18,8 +18,8 @@ import java.net.Socket;
  */
 public abstract class Host {
     protected Socket connectionSocket;
-    protected int porta;
     protected GestoreChat gestore;
+    protected int porta;
     
     /**
      * Costruttore della classe. Inizializza il valore della porta.

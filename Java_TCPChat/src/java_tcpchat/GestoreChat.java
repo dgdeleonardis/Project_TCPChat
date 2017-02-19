@@ -63,7 +63,7 @@ public class GestoreChat {
     /**
      * Metodo che ha come funzione l'interpretazione dell'input dell'utente
      */
-    public void menu() {
+    public void scriviMessaggio() {
         //Nel momento in cui verrà digitato un comando speciale da parte di una delle due entità
         //sarà comunque necessario inviare un messaggio vuoto all'entità "destinatario"
         //tramite l'istruzione this.scrivi("");
@@ -135,7 +135,7 @@ public class GestoreChat {
     /**
      *
      */
-    public void leggi() {
+    public void leggiMessaggio() {
         try {
             String letta = inDataStream.readUTF();
             String datiTemp[] = letta.split("§");
