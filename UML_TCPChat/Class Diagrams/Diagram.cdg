@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Java_TCPChat">
+  <ClassDiagramComponents>
+    <Class name="Client" package="java_tcpchat" visibility="public" xPosition="48.0" yPosition="475.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="int" name="porta"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="connetti" returnType="String" visibility="public">
+          <Argument type="String" name="autoreDefault"/>
+          <Argument type="String" name="coloreTerminaleDefault"/>
+        </Method>
+        <Method name="main" returnType="String[]" visibility="public" isStatic="true">
+          <Argument type="String[]" name="args"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="GestoreChat" package="java_tcpchat" visibility="public" xPosition="899.0" yPosition="27.0">
+      <Fields>
+        <Field name="inDataStream" type="DataInputStream" visibility="private" isFinal="true"/>
+        <Field name="outDataStream" type="DataOutputStream" visibility="private" isFinal="true"/>
+        <Field name="tastiera" type="Scanner" visibility="private" isFinal="true"/>
+        <Field name="autore" type="String" visibility="private"/>
+        <Field name="COLORE" type="String" visibility="private" isFinal="true"/>
+        <Field name="ultimoMessaggio" type="String" visibility="private"/>
+        <Field name="connesso" type="boolean" visibility="private"/>
+        <Field name="disponibilita" type="boolean" visibility="private"/>
+        <Field name="RESET" type="String" visibility="public" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="DataInputStream" name="in"/>
+          <Argument type="DataOutputStream" name="out"/>
+          <Argument type="String" name="nome"/>
+          <Argument type="String" name="colore"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="scriviMessaggio" returnType="void" visibility="public"/>
+        <Method name="leggiMessaggio" returnType="void" visibility="public"/>
+        <Method name="inviaMessaggio" returnType="String" visibility="public">
+          <Argument type="String" name="messaggio"/>
+        </Method>
+        <Method name="chiudi" returnType="void" visibility="public"/>
+        <Method name="stampaMenu" returnType="void" visibility="public"/>
+        <Method name="getConnesso" returnType="boolean" visibility="public"/>
+        <Method name="getAutore" returnType="String" visibility="public"/>
+        <Method name="getCOLORE" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Host" package="java_tcpchat" visibility="public" isAbstract="true" xPosition="442.0" yPosition="144.0">
+      <Fields>
+        <Field name="connectionSocket" type="Socket" visibility="protected"/>
+        <Field name="gestore" type="GestoreChat" visibility="protected"/>
+        <Field name="porta" type="int" visibility="protected"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="int" name="porta"/>
+        </Constructor>
+      </Constructors>
+      <Methods/>
+    </Class>
+    <Class name="Server" package="java_tcpchat" visibility="public" xPosition="496.0" yPosition="475.0">
+      <Fields>
+        <Field name="serverSocket" type="ServerSocket" visibility="package"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="int" name="porta"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="attendi" returnType="String" visibility="public">
+          <Argument type="String" name="autoreDefault"/>
+          <Argument type="String" name="coloreTerminaleDefault"/>
+        </Method>
+        <Method name="main" returnType="String[]" visibility="public" isStatic="true">
+          <Argument type="String[]" name="args"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ServerSocket" package="" visibility="public" xPosition="613.0" yPosition="743.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="int" name="porta"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="accept" returnType="Socket" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Socket" package="" visibility="public" xPosition="48.0" yPosition="162.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="close" returnType="void" visibility="public"/>
+        <Method name="getInputStream" returnType="InputStream" visibility="public"/>
+        <Method name="getOutputStream" returnType="OutputStream" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="DataInputStream" package="" visibility="public" xPosition="863.0" yPosition="701.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="readUTF" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="DataOutputStream" package="" visibility="public" xPosition="1253.0" yPosition="701.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="writeUTF" returnType="String" visibility="public">
+          <Argument type="String" name="str"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Scanner" package="" visibility="public" xPosition="1062.0" yPosition="701.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="InputStream" name="in"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="nextLine" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="serverSocket" source="java_tcpchat.Server" target="ServerSocket" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="inDataStream" source="java_tcpchat.GestoreChat" target="DataInputStream" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="outDataStream" source="java_tcpchat.GestoreChat" target="DataOutputStream" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="java_tcpchat.Client" target="java_tcpchat.Host"/>
+    <HasRelation name="gestore" source="java_tcpchat.Host" target="java_tcpchat.GestoreChat" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="connectionSocket" source="java_tcpchat.Host" target="Socket" type="Aggregation" sourceCardinality="0..1" targetCardinality="0..1"/>
+    <IsRelation name="is" source="java_tcpchat.Server" target="java_tcpchat.Host"/>
+    <HasRelation name="tastiera" source="java_tcpchat.GestoreChat" target="Scanner" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
